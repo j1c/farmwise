@@ -1,5 +1,7 @@
-import geopandas as gpd
 from pathlib import Path
+
+import geopandas as gpd
+import pandas as pd
 
 DATA_DIR = Path(Path(__file__).absolute().parents[2]) / "data"
 
@@ -9,7 +11,7 @@ def load_county_boundaries(state_code):
 
     Parameters
     ----------
-    state_code : str
+    state_code : int
         Numeric state code
 
     Returns
@@ -21,6 +23,7 @@ def load_county_boundaries(state_code):
 
     # load data
     df = gpd.read_file(CB_DATA_DIR)
+    df[["STATEFP", "COUNTYFP"]] = df[["STATEFP", "COUNTYFP"]].apply(pd.to_numeric)
 
     # subsample based on state
     df = df[df["STATEFP"] == state_code]
